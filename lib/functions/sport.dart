@@ -44,9 +44,7 @@ String kmMintoMileMin({required int seconds}) {
 }
 
 double meterSecondConverter({required bool metric, required int seconds}) {
-  if (seconds == null) {
-    return 0;
-  } else if (metric)
+  if (metric)
     return 1000 / seconds;
   else
     return mileLength * 1000 / seconds;
@@ -55,11 +53,15 @@ double meterSecondConverter({required bool metric, required int seconds}) {
 double timeElapsed({required int distance, required double speed}) =>
     distance / speed;
 
-String secondsToTimeString({required double seconds}) =>
-    "${(seconds / 60).floor()}:${(seconds % 60).floor()}";
+String secondsToTimeString({required double secondsUsed}) {
+  var test = Duration(seconds: secondsUsed.toInt());
+
+  return test.toString().split('.').first.padLeft(8, "0");
+  // return "${(secondsUsed / 60).floor()} minutes :${(secondsUsed % 60).floor()}";
+}
 
 String timeUsed({required double pace, required var length}) {
-  return secondsToTimeString(seconds: (length / pace));
+  return secondsToTimeString(secondsUsed: (length / pace));
 }
 // var speed1 = meterSecondConverter(metric: true, minutes: 4, seconds: 20);
 
