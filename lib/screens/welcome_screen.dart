@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:run_app/functions/sport.dart';
 
+var secondsUsed = 0;
+
 class WelcomeScreen extends StatefulWidget {
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -9,10 +11,14 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  var verdi;
+  void initState() {
+    secondsUsed = 0;
+    super.initState();
+  }
+
   bool metric = true;
   var speed = 1.0;
-  List<bool> _selections = List.generate(2, (_) => false);
+  List<bool> _selections = [true, false];
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -60,19 +66,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               padding: const EdgeInsets.only(bottom: 50.0),
               child: Container(
                 height: 100,
+                width: 250,
                 child: CupertinoTimerPicker(
                     mode: CupertinoTimerPickerMode.ms,
                     onTimerDurationChanged: (value) {
                       setState(() {
-                        verdi = value.inSeconds;
-                        if (verdi != null) {
-                          speed = meterSecondConverter(
-                            metric: _selections[0],
-                            seconds: verdi,
-                          );
-                          print(verdi);
-                          print(speed);
-                        }
+                        secondsUsed = value.inSeconds;
+
+                        speed = meterSecondConverter(
+                          metric: _selections[0],
+                          seconds: secondsUsed,
+                        );
+                        print(secondsUsed);
+                        print(speed);
                       });
                     }),
               ),
@@ -83,11 +89,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             _selections[0]
                 ? Text(
-                    "Converted to miles: \n ${kmMintoMileMin(seconds: verdi)} min/mile",
+                    "Converted to miles: \n ${kmMintoMileMin(seconds: secondsUsed)} min/mile",
                     textAlign: TextAlign.center,
                   )
                 : Text(
-                    "Converted to kilometers: \n ${mpMinToKmMin(seconds: verdi)} min/km",
+                    "Converted to kilometers: \n ${mpMinToKmMin(seconds: secondsUsed)} min/km",
                     textAlign: TextAlign.center,
                   ),
             Padding(
