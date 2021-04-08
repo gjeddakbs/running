@@ -64,38 +64,47 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 50.0),
-              child: Container(
-                height: 100,
-                width: 250,
-                child: CupertinoTimerPicker(
-                    mode: CupertinoTimerPickerMode.ms,
-                    onTimerDurationChanged: (value) {
-                      setState(() {
-                        secondsUsed = value.inSeconds;
+              child: Row(
+                children: [
+                  Container(
+                    height: 100,
+                    width: 250,
+                    child: CupertinoTimerPicker(
+                        mode: CupertinoTimerPickerMode.ms,
+                        onTimerDurationChanged: (value) {
+                          setState(() {
+                            secondsUsed = value.inSeconds;
 
-                        speed = meterSecondConverter(
-                          metric: _selections[0],
-                          seconds: secondsUsed,
-                        );
-                        print(secondsUsed);
-                        print(speed);
-                      });
-                    }),
+                            speed = meterSecondConverter(
+                              metric: _selections[0],
+                              seconds: secondsUsed,
+                            );
+                            print(secondsUsed);
+                            print(speed);
+                          });
+                        }),
+                  ),
+                ],
               ),
             ),
+            Text("Speed"),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text("${speed.toStringAsFixed(2)} meter/s"),
             ),
             _selections[0]
                 ? Text(
-                    "Converted to miles: \n ${kmMintoMileMin(seconds: secondsUsed)} min/mile",
+                    "Mile pace: \n ${kmMintoMileMin(seconds: secondsUsed)} min/mile",
                     textAlign: TextAlign.center,
                   )
                 : Text(
-                    "Converted to kilometers: \n ${mpMinToKmMin(seconds: secondsUsed)} min/km",
+                    "Km pace: \n ${mpMinToKmMin(seconds: secondsUsed)} min/km",
                     textAlign: TextAlign.center,
                   ),
+            Text("Per hour"),
+            Text("${kmPerHourConverter(pace: speed).toStringAsFixed(2)} km/h"),
+            Text(
+                "${milesPerHourConverter(pace: speed).toStringAsFixed(2)} miles/h"),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(

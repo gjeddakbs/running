@@ -50,6 +50,10 @@ double meterSecondConverter({required bool metric, required int seconds}) {
     return mileLength * 1000 / seconds;
 }
 
+double kmPerHourConverter({required double pace}) => pace * 3600 / 1000;
+double milesPerHourConverter({required double pace}) =>
+    pace * 3600 / (mileLength * 1000);
+
 double timeElapsed({required int distance, required double speed}) =>
     distance / speed;
 
