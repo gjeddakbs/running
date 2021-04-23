@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:run_app/components/menu_button.dart';
 import 'package:run_app/screens/pace_screen.dart';
 import 'package:run_app/screens/progression_screen.dart';
+import 'package:run_app/screens/running_pace_screen.dart';
+import 'package:run_app/screens/track_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   static String id = "menu_screen";
@@ -25,6 +27,11 @@ class _MenuScreenState extends State<MenuScreen> {
             MenuButton(
                 buttonText: "Progression calculator",
                 destination: ProgressionScreen.id),
+            MenuButton(
+                buttonText: "Track calculator", destination: TrackScreen.id),
+            MenuButton(
+                buttonText: "Multi calculator",
+                destination: RunningPaceScreen.id),
           ],
         ),
       ),

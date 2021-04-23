@@ -75,7 +75,7 @@ class _PaceScreenState extends State<PaceScreen> {
               child: Row(
                 children: [
                   Container(
-                    height: 100,
+                    // height: 50,
                     width: 250,
                     child: CupertinoTimerPicker(
                         // key: UniqueKey(),

@@ -11,7 +11,7 @@ class ProgressionScreen extends StatefulWidget {
 class _ProgressionScreenState extends State<ProgressionScreen> {
   double currentMileage = 0.0;
   double mileageGoal = 0.0;
-  bool resultater = false;
+  bool results = false;
   List<double> resultList = [];
 
   @override
@@ -50,11 +50,12 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                     resultList = progression(
                         currentMileage: currentMileage,
                         mileageGoal: mileageGoal);
-                    resultater = true;
+                    results = true;
                   });
+                  FocusScope.of(context).unfocus();
                 },
                 child: Text("Submit")),
-            resultater
+            results
                 ? Expanded(
                     child: ListView.builder(
                         itemCount: resultList.length,
@@ -67,8 +68,6 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                         }),
                   )
                 : Text(""),
-            // Text(resultList.toString()),
-            // Text("Number of weeks: ${resultList.length}"),
           ],
         ),
       ),
