@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-double currentSliderValue = 20;
+double lengthInput = 0;
+double lengthResult = 0;
 
 class MultiCalc extends StatefulWidget {
   @override
@@ -8,7 +10,25 @@ class MultiCalc extends StatefulWidget {
 }
 
 class _MultiCalcState extends State<MultiCalc> {
-  List<String> distance = ["km", "miles", "Half-marathon", "Marathon"];
+  int hoursPassed = 0;
+  int minutesPassed = 0;
+  int secondsPassed = 0;
+  int paceHourInput = 0;
+
+  int paceMinutesInput = 0;
+  int paceSecondsInput = 0;
+  int paceSecondsResult = 0;
+  int paceMinutesResult = 0;
+  int paceHoursResult = 0;
+  int hourInput = 0;
+  int minutesInput = 0;
+  int secondsInput = 0;
+
+  List<String> distance = [
+    "km",
+    "miles",
+    "meters",
+  ];
   String dropDownValue = "km";
   @override
   Widget build(BuildContext context) {
@@ -17,55 +37,150 @@ class _MultiCalcState extends State<MultiCalc> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-                child: TextFormField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    currentSliderValue = double.parse(value);
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: currentSliderValue.toString(),
-                hintText: currentSliderValue.toString(),
-              ),
-            )),
-            Center(child: Text(currentSliderValue.toStringAsFixed(1))),
+            Text("Time"),
             Row(
               children: [
-                Expanded(
-                  child: Slider(
-                      min: 0,
-                      max: 200.0,
-                      value: currentSliderValue,
-                      label: currentSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          currentSliderValue = value;
-                        });
-                      }),
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    initialValue: hoursPassed.toString(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      hourInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Hours",
+                    ),
+                  ),
                 ),
-                DropdownButton(
-                  isDense: true,
-                  value: dropDownValue,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropDownValue = newValue!;
-                    });
-                    distanceUpdater(inputMetrics: dropDownValue);
-                  },
-                  items: distance.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                )
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    initialValue: minutesPassed.toString(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      minutesInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Minutes",
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    initialValue: secondsPassed.toString(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      secondsInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Seconds",
+                    ),
+                  ),
+                ),
               ],
-            )
+            ),
+            Text("Length"),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    keyboardType: TextInputType.number,
+                    initialValue: lengthResult.toString(),
+                    onChanged: (value) {
+                      secondsInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Length",
+                    ),
+                  ),
+                ),
+                // Flexible(
+                //   child: DropdownButton(
+                //     // key: ValueKey(dropDownValue),
+                //     // isDense: true,
+                //     value: dropDownValue,
+                //     onChanged: (String? newValue) {
+                //       setState(() {
+                //         dropDownValue = newValue!;
+                //       });
+                //     },
+                //     items:
+                //         distance.map<DropdownMenuItem<String>>((String value) {
+                //       return DropdownMenuItem<String>(
+                //         value: value,
+                //         child: Text(value),
+                //       );
+                //     }).toList(),
+                //   ),
+                // ),
+              ],
+            ),
+            Text("Pace"),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    initialValue: paceHoursResult != 0
+                        ? paceHoursResult.toString()
+                        : null,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      paceHourInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "hour",
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    keyboardType: TextInputType.number,
+                    initialValue: paceMinutesResult.toString(),
+                    onChanged: (value) {
+                      paceMinutesInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "minutes",
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: TextFormField(
+                    key: UniqueKey(),
+                    keyboardType: TextInputType.number,
+                    initialValue: paceSecondsResult.toString(),
+                    onChanged: (value) {
+                      paceSecondsInput = int.parse(value);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "seconds",
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    hoursPassed = 50;
+                    // paceHoursResult = updateTest();
+                    paceHoursResult = 30;
+                  });
+                  print(paceHoursResult.toString());
+                },
+                child: Text("Press meg "))
           ],
         ),
       ),
@@ -73,10 +188,6 @@ class _MultiCalcState extends State<MultiCalc> {
   }
 }
 
-void distanceUpdater({required String inputMetrics}) {
-  if (inputMetrics == "Half-marathon") {
-    currentSliderValue = 21.0975;
-  } else if (inputMetrics == "Marathon") {
-    currentSliderValue = 42.195;
-  }
+int updateTest() {
+  return 10;
 }
