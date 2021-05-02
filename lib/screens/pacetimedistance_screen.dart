@@ -27,12 +27,15 @@ LengthMetric selectedLength = LengthMetric.meters;
 
 class _PaceTimeDistanceState extends State<PaceTimeDistance> {
   void timeCalcLive() {
-    setState(() {
-      timeResult = timeUsed(
-          pace: meterSecondConverter2(
-              speedMetric: selectedSpeed, seconds: secondsUsed, value: speed),
-          length: lengthToMeter(lengthMetric: selectedLength, length: length));
-    });
+    if (length > 0 && secondsUsed > 0 || speed > 0) {
+      setState(() {
+        timeResult = timeUsed(
+            pace: meterSecondConverter2(
+                speedMetric: selectedSpeed, seconds: secondsUsed, value: speed),
+            length:
+                lengthToMeter(lengthMetric: selectedLength, length: length));
+      });
+    }
   }
 
   Widget paceWidget({required metric}) {
@@ -67,9 +70,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                     setState(() {
                       speed = value.toDouble();
 
-                      if (length > 0) {
-                        timeCalcLive();
-                      }
+                      timeCalcLive();
                     });
                   }),
             ),
@@ -86,7 +87,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
               onTimerDurationChanged: (value) {
                 setState(() {
                   secondsUsed = value.inSeconds;
-                  if (length > 0) timeCalcLive();
+                  timeCalcLive();
                 });
               }),
         ),
@@ -130,6 +131,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                                 : kInactiveCardColour,
                             cardChild: MetricLabelContent(labelText: "km/h"),
                             onPress: () {
+                              timeCalcLive();
                               setState(() {
                                 selectedSpeed = SpeedMetric.kmHour;
                               });
@@ -151,6 +153,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                                 : kInactiveCardColour,
                             cardChild: MetricLabelContent(labelText: "mph"),
                             onPress: () {
+                              timeCalcLive();
                               setState(() {
                                 selectedSpeed = SpeedMetric.milesHour;
                               });
@@ -183,6 +186,8 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
+                              timeCalcLive();
+
                               selectedLength = LengthMetric.meters;
                             });
                           }),
@@ -195,6 +200,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
+                              timeCalcLive();
                               selectedLength = LengthMetric.km;
                             });
                           }),
@@ -207,6 +213,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
+                              timeCalcLive();
                               selectedLength = LengthMetric.miles;
                             });
                           }),
@@ -221,6 +228,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() {
+                            timeCalcLive();
                             length = double.parse(value);
                           });
                         },
