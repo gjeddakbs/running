@@ -11,7 +11,8 @@ class CalculationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onPress(),
+      onTap: () => {onPress(), print("onTap")},
+      // onTapDown: onPress,
       child: Container(
         child: cardChild,
         margin: EdgeInsets.all(5.0),

@@ -131,9 +131,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                                 : kInactiveCardColour,
                             cardChild: MetricLabelContent(labelText: "km/h"),
                             onPress: () {
-                              timeCalcLive();
                               setState(() {
                                 selectedSpeed = SpeedMetric.kmHour;
+                                timeCalcLive();
                               });
                             }),
                         CalculationCard(
@@ -153,9 +153,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                                 : kInactiveCardColour,
                             cardChild: MetricLabelContent(labelText: "mph"),
                             onPress: () {
-                              timeCalcLive();
                               setState(() {
                                 selectedSpeed = SpeedMetric.milesHour;
+                                timeCalcLive();
                               });
                             })
                       ],
@@ -186,9 +186,8 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
-                              timeCalcLive();
-
                               selectedLength = LengthMetric.meters;
+                              timeCalcLive();
                             });
                           }),
                       CalculationCard(
@@ -200,8 +199,8 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
-                              timeCalcLive();
                               selectedLength = LengthMetric.km;
+                              timeCalcLive();
                             });
                           }),
                       CalculationCard(
@@ -213,8 +212,8 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                           ),
                           onPress: () {
                             setState(() {
-                              timeCalcLive();
                               selectedLength = LengthMetric.miles;
+                              timeCalcLive();
                             });
                           }),
                     ],
