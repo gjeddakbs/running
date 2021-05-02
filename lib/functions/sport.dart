@@ -67,6 +67,27 @@ String secondsToTimeString({required double secondsUsed}) {
 String timeUsed({required double pace, required var length}) {
   return secondsToTimeString(secondsUsed: (length / pace));
 }
+
+double lengthToMeter({required lengthMetric, required var length}) {
+  if (lengthMetric.toString() == "LengthMetric.meters") {
+    return length;
+  } else if (lengthMetric.toString() == "LengthMetric.miles") {
+    return length * (mileLength * 1000);
+  }
+  return length * 1000;
+}
+
+double meterSecondConverter2({required speedMetric, var seconds, var value}) {
+  if (speedMetric.toString() == "SpeedMetric.kmMin")
+    return 1000 / seconds;
+  else if (speedMetric.toString() == "SpeedMetric.milesMin")
+    return mileLength * 1000 / seconds;
+  else if (speedMetric.toString() == "SpeedMetric.kmHour")
+    return (value * 5) / 18;
+  else
+    return value * 0.44704;
+}
+
 // var speed1 = meterSecondConverter(metric: true, minutes: 4, seconds: 20);
 
 // var timeElapsed1000 = timeElapsed(distance: 1000, speed: speed1);

@@ -14,8 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.dark().copyWith(
+        primaryColor: const Color(0xFF0A0D21),
+        scaffoldBackgroundColor: const Color(0xFF0A0D21),
       ),
       home: MenuScreen(),
       initialRoute: MenuScreen.id,

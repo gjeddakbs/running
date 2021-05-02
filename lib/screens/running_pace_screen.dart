@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:run_app/screens/pace_time_distance_screen.dart';
+import 'package:run_app/screens/pacetimedistance_screen.dart';
 import 'package:run_app/screens/progression_screen.dart';
 import 'package:run_app/screens/track_screen.dart';
 
@@ -15,7 +15,7 @@ class _RunningPaceScreenState extends State<RunningPaceScreen> {
   // static const TextStyle optionStyle =
   //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
-    MultiCalc(),
+    PaceTimeDistance(),
     TrackScreen(),
     ProgressionScreen(),
   ];

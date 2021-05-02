@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:run_app/functions/sport.dart';
 
 double lengthInput = 0;
 double lengthResult = 0;
@@ -37,7 +38,7 @@ class _MultiCalcState extends State<MultiCalc> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Time"),
+            Text("Time to finish"),
             Row(
               children: [
                 Flexible(
@@ -93,7 +94,7 @@ class _MultiCalcState extends State<MultiCalc> {
                     keyboardType: TextInputType.number,
                     initialValue: lengthResult.toString(),
                     onChanged: (value) {
-                      secondsInput = int.parse(value);
+                      lengthInput = double.parse(value);
                     },
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(),
@@ -122,7 +123,7 @@ class _MultiCalcState extends State<MultiCalc> {
                 // ),
               ],
             ),
-            Text("Pace"),
+            Text("Pace (time elapsed per kilometer)"),
             Row(
               children: [
                 Flexible(
@@ -171,14 +172,46 @@ class _MultiCalcState extends State<MultiCalc> {
                 ),
               ],
             ),
+            GestureDetector(),
             TextButton(
                 onPressed: () {
+                  print((3000 / 60).floor());
                   setState(() {
-                    hoursPassed = 50;
-                    // paceHoursResult = updateTest();
-                    paceHoursResult = 30;
+                    // if (lengthInput == 0.0 && lengthResult == 0.0) {
+                    //   print("Lengdekalkulering trigga");
+                    //   lengthResult =
+                    //       (secondsSum(hourInput, minutesInput, secondsInput)) *
+                    //           meterSecondConverter(
+                    //               metric: true,
+                    //               seconds: secondsSum(paceHourInput,
+                    //                   paceMinutesInput, paceSecondsInput));
+                    // }
+                    print(hourInput);
+                    print(minutesInput);
+                    print(secondsInput);
+                    if (hourInput == 0 &&
+                        minutesInput == 0 &&
+                        secondsInput == 0) {
+                      print("tidskalkulering trigga");
+                      double result = lengthInput /
+                          meterSecondConverter(
+                              metric: true,
+                              seconds: secondsSum(paceHourInput,
+                                  paceMinutesInput, paceSecondsInput));
+                      print(result);
+                      var hourResult = (result / 3600).floor();
+                      hoursPassed = hourResult;
+                      result -= hourResult;
+
+                      var minuteResult = (result / 60).floor();
+                      print("minuteResult:  $minuteResult");
+                      minutesPassed = minuteResult;
+                      result -= minuteResult;
+                      var secondResults = result;
+                      print("secondresults: $secondResults");
+                      secondsPassed = secondResults.toInt();
+                    }
                   });
-                  print(paceHoursResult.toString());
                 },
                 child: Text("Press meg "))
           ],
@@ -190,4 +223,8 @@ class _MultiCalcState extends State<MultiCalc> {
 
 int updateTest() {
   return 10;
+}
+
+int secondsSum(int hours, int minutes, int seconds) {
+  return ((hours * 3600) + (minutes * 60) + seconds);
 }
