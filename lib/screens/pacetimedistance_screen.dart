@@ -10,11 +10,15 @@ import 'package:run_app/functions/sport.dart';
 enum CalculationType { pace, distance, time }
 enum SpeedMetric { milesMin, kmMin, kmHour, milesHour }
 enum LengthMetric { meters, km, miles }
+
 var secondsUsed = 0;
+var timeInputSeconds = 0;
 double length = 0;
 double speed = 0.0;
 double meterSecond = 0;
 String timeResult = "00:00:00";
+String paceResult = "00h 00m 00s";
+String distanceResult = "10km";
 
 class PaceTimeDistance extends StatefulWidget {
   @override
@@ -36,6 +40,18 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                 lengthToMeter(lengthMetric: selectedLength, length: length));
       });
     }
+  }
+
+  void paceCalcLive() {
+    setState(() {
+      paceResult = "FUNKIS";
+    });
+  }
+
+  void distanceCalcLive() {
+    setState(() {
+      distanceResult = "DISTANCE LONG OK";
+    });
   }
 
   Widget paceWidget({required metric}) {
@@ -107,135 +123,11 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
             children: [
               Container(
                 decoration: kBoxDeco,
-                child: Column(
-                  children: [
-                    Text(
-                      "Pace",
-                      style: kNumberTextStyle,
-                    ),
-                    Row(
-                      children: [
-                        CalculationCard(
-                            colour: selectedSpeed == SpeedMetric.kmMin
-                                ? kActiveCardColor
-                                : kInactiveCardColour,
-                            cardChild: MetricLabelContent(labelText: "min/km"),
-                            onPress: () {
-                              setState(() {
-                                selectedSpeed = SpeedMetric.kmMin;
-                              });
-                            }),
-                        CalculationCard(
-                            colour: selectedSpeed == SpeedMetric.kmHour
-                                ? kActiveCardColor
-                                : kInactiveCardColour,
-                            cardChild: MetricLabelContent(labelText: "km/h"),
-                            onPress: () {
-                              setState(() {
-                                selectedSpeed = SpeedMetric.kmHour;
-                                timeCalcLive();
-                              });
-                            }),
-                        CalculationCard(
-                            colour: selectedSpeed == SpeedMetric.milesMin
-                                ? kActiveCardColor
-                                : kInactiveCardColour,
-                            cardChild:
-                                MetricLabelContent(labelText: "min/miles"),
-                            onPress: () {
-                              setState(() {
-                                selectedSpeed = SpeedMetric.milesMin;
-                              });
-                            }),
-                        CalculationCard(
-                            colour: selectedSpeed == SpeedMetric.milesHour
-                                ? kActiveCardColor
-                                : kInactiveCardColour,
-                            cardChild: MetricLabelContent(labelText: "mph"),
-                            onPress: () {
-                              setState(() {
-                                selectedSpeed = SpeedMetric.milesHour;
-                                timeCalcLive();
-                              });
-                            })
-                      ],
-                    ),
-                    paceWidget(metric: selectedSpeed),
-                  ],
-                ),
+                child: paceInput(),
               ),
             ],
           ),
-          Container(
-              decoration: kBoxDeco,
-              child: Column(
-                children: [
-                  Text(
-                    "Length",
-                    style: kNumberTextStyle,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CalculationCard(
-                          colour: selectedLength == LengthMetric.meters
-                              ? kActiveCardColor
-                              : kInactiveCardColour,
-                          cardChild: MetricLabelContent(
-                            labelText: "meters",
-                          ),
-                          onPress: () {
-                            setState(() {
-                              selectedLength = LengthMetric.meters;
-                              timeCalcLive();
-                            });
-                          }),
-                      CalculationCard(
-                          colour: selectedLength == LengthMetric.km
-                              ? kActiveCardColor
-                              : kInactiveCardColour,
-                          cardChild: MetricLabelContent(
-                            labelText: "km",
-                          ),
-                          onPress: () {
-                            setState(() {
-                              selectedLength = LengthMetric.km;
-                              timeCalcLive();
-                            });
-                          }),
-                      CalculationCard(
-                          colour: selectedLength == LengthMetric.miles
-                              ? kActiveCardColor
-                              : kInactiveCardColour,
-                          cardChild: MetricLabelContent(
-                            labelText: "miles",
-                          ),
-                          onPress: () {
-                            setState(() {
-                              selectedLength = LengthMetric.miles;
-                              timeCalcLive();
-                            });
-                          }),
-                    ],
-                  ),
-                  Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 52.0),
-                      child: TextFormField(
-                        style: kNumberTextStyle,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          setState(() {
-                            timeCalcLive();
-                            length = double.parse(value);
-                          });
-                        },
-                      ),
-                    ),
-                  ]),
-                ],
-              )),
+          Container(decoration: kBoxDeco, child: lengthInput()),
           Text(
             "Time used:\n $timeResult",
             style: kLargeButtonTextStyle,
@@ -255,13 +147,195 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
               buttonTitle: "Calculate"),
         ],
       );
+      /**DISTANCE */
     } else if (selectedValue == CalculationType.distance) {
-      return Row(
-        children: [Text("Pace"), Text("Time")],
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            child: paceInput(),
+            decoration: kBoxDeco,
+          ),
+          Container(decoration: kBoxDeco, child: timeInput()),
+          Text(
+            "Distance ran:\n $distanceResult",
+            style: kLargeButtonTextStyle,
+          ),
+          BottomButton(
+              onTap: distanceCalcLive, buttonTitle: "Calculate distance")
+        ],
       );
     }
+    /**PACE*/
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(decoration: kBoxDeco, child: timeInput()),
+          Container(decoration: kBoxDeco, child: lengthInput()),
+          speedCardRow(onTapFunction: paceCalcLive),
+          Text(
+            "Running pace:\n $paceResult",
+            style: kLargeButtonTextStyle,
+          ),
+          BottomButton(onTap: paceCalcLive, buttonTitle: "Calculate pace")
+        ]);
+  }
+
+  Column lengthInput() {
+    return Column(
+      children: [
+        Text(
+          "Length",
+          style: kNumberTextStyle,
+        ),
+        lengthMetricRow(onTapFunction: timeCalcLive),
+        Column(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 52.0),
+            child: TextFormField(
+              style: kNumberTextStyle,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  timeCalcLive();
+                  length = double.parse(value);
+                });
+              },
+            ),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Row lengthMetricRow({required Function onTapFunction}) {
     return Row(
-      children: [Text("Time"), Text("Length")],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CalculationCard(
+            colour: selectedLength == LengthMetric.meters
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(
+              labelText: "meters",
+            ),
+            onPress: () {
+              setState(() {
+                selectedLength = LengthMetric.meters;
+                onTapFunction();
+              });
+            }),
+        CalculationCard(
+            colour: selectedLength == LengthMetric.km
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(
+              labelText: "km",
+            ),
+            onPress: () {
+              setState(() {
+                selectedLength = LengthMetric.km;
+                onTapFunction();
+              });
+            }),
+        CalculationCard(
+            colour: selectedLength == LengthMetric.miles
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(
+              labelText: "miles",
+            ),
+            onPress: () {
+              setState(() {
+                selectedLength = LengthMetric.miles;
+                onTapFunction();
+              });
+            }),
+      ],
+    );
+  }
+
+  Column paceInput() {
+    return Column(
+      children: [
+        Text(
+          "Pace",
+          style: kNumberTextStyle,
+        ),
+        speedCardRow(onTapFunction: timeCalcLive),
+        paceWidget(metric: selectedSpeed),
+      ],
+    );
+  }
+
+  Row speedCardRow({required Function onTapFunction}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CalculationCard(
+            colour: selectedSpeed == SpeedMetric.kmMin
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(labelText: "min/km"),
+            onPress: () {
+              setState(() {
+                selectedSpeed = SpeedMetric.kmMin;
+                onTapFunction();
+              });
+            }),
+        CalculationCard(
+            colour: selectedSpeed == SpeedMetric.kmHour
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(labelText: "km/h"),
+            onPress: () {
+              setState(() {
+                selectedSpeed = SpeedMetric.kmHour;
+                onTapFunction();
+              });
+            }),
+        CalculationCard(
+            colour: selectedSpeed == SpeedMetric.milesMin
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(labelText: "min/miles"),
+            onPress: () {
+              setState(() {
+                selectedSpeed = SpeedMetric.milesMin;
+                onTapFunction();
+              });
+            }),
+        CalculationCard(
+            colour: selectedSpeed == SpeedMetric.milesHour
+                ? kActiveCardColor
+                : kInactiveCardColour,
+            cardChild: MetricLabelContent(labelText: "mph"),
+            onPress: () {
+              setState(() {
+                selectedSpeed = SpeedMetric.milesHour;
+                onTapFunction();
+              });
+            })
+      ],
+    );
+  }
+
+  Column timeInput() {
+    return Column(
+      children: [
+        Text(
+          "Time",
+          style: kNumberTextStyle,
+        ),
+        CupertinoTimerPicker(onTimerDurationChanged: (value) {
+          setState(() {
+            timeInputSeconds = value.inSeconds;
+          });
+        })
+      ],
     );
   }
 
