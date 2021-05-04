@@ -43,9 +43,16 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
   }
 
   void paceCalcLive() {
-    setState(() {
-      paceResult = "FUNKIS";
-    });
+    if (length > 0.0) {
+      setState(() {
+        var paceInput = velocity(
+            time: timeInputSeconds,
+            distance:
+                lengthToMeter(lengthMetric: selectedLength, length: length));
+        paceResult = meterSecondToDifferentSpeeds(
+            meterSecondSpeed: paceInput, speedEnum: selectedSpeed);
+      });
+    }
   }
 
   void distanceCalcLive() {
@@ -58,13 +65,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     if (metric == SpeedMetric.kmHour || metric == SpeedMetric.milesHour) {
       return Column(
         children: [
-          Row(
-            children: [
-              Text(
-                "${speed.toStringAsFixed(1)} ${(metric == SpeedMetric.kmHour) ? "km/h" : "mph"}",
-                style: kNumberTextStyle,
-              ),
-            ],
+          Text(
+            "${speed.toStringAsFixed(1)} ${(metric == SpeedMetric.kmHour) ? "km/h" : "mph"}",
+            style: kNumberTextStyle,
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
@@ -118,16 +121,13 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: kBoxDeco,
-                child: paceInput(),
-              ),
-            ],
+          Container(
+            decoration: kBoxDeco,
+            child: paceInput(),
           ),
-          Container(decoration: kBoxDeco, child: lengthInput()),
+          Container(
+              decoration: kBoxDeco,
+              child: lengthInput(onTapFunction: timeCalcLive)),
           Text(
             "Time used:\n $timeResult",
             style: kLargeButtonTextStyle,
@@ -157,7 +157,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
             child: paceInput(),
             decoration: kBoxDeco,
           ),
-          Container(decoration: kBoxDeco, child: timeInput()),
+          Container(
+              decoration: kBoxDeco,
+              child: timeInput(onChangeFunction: distanceCalcLive)),
           Text(
             "Distance ran:\n $distanceResult",
             style: kLargeButtonTextStyle,
@@ -172,8 +174,12 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(decoration: kBoxDeco, child: timeInput()),
-          Container(decoration: kBoxDeco, child: lengthInput()),
+          Container(
+              decoration: kBoxDeco,
+              child: timeInput(onChangeFunction: paceCalcLive)),
+          Container(
+              decoration: kBoxDeco,
+              child: lengthInput(onTapFunction: paceCalcLive)),
           speedCardRow(onTapFunction: paceCalcLive),
           Text(
             "Running pace:\n $paceResult",
@@ -183,25 +189,28 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         ]);
   }
 
-  Column lengthInput() {
+  Column lengthInput({required Function onTapFunction}) {
     return Column(
       children: [
         Text(
           "Length",
           style: kNumberTextStyle,
         ),
-        lengthMetricRow(onTapFunction: timeCalcLive),
+        lengthMetricRow(onTapFunction: onTapFunction),
         Column(children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 52.0),
             child: TextFormField(
+              initialValue: length.toString(),
               style: kNumberTextStyle,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 setState(() {
-                  timeCalcLive();
-                  length = double.parse(value);
+                  if (value.isNotEmpty) {
+                    length = double.parse(value);
+                    timeCalcLive();
+                  }
                 });
               },
             ),
@@ -282,6 +291,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
             cardChild: MetricLabelContent(labelText: "min/km"),
             onPress: () {
               setState(() {
+                print("kmMin");
                 selectedSpeed = SpeedMetric.kmMin;
                 onTapFunction();
               });
@@ -323,18 +333,22 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     );
   }
 
-  Column timeInput() {
+  Column timeInput({required Function onChangeFunction}) {
     return Column(
       children: [
         Text(
           "Time",
           style: kNumberTextStyle,
         ),
-        CupertinoTimerPicker(onTimerDurationChanged: (value) {
-          setState(() {
-            timeInputSeconds = value.inSeconds;
-          });
-        })
+        Container(
+          height: 150,
+          child: CupertinoTimerPicker(onTimerDurationChanged: (value) {
+            setState(() {
+              timeInputSeconds = value.inSeconds;
+              onChangeFunction();
+            });
+          }),
+        )
       ],
     );
   }
@@ -356,7 +370,15 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                         ? kActiveCardColor
                         : kInactiveCardColour,
                     cardChild: IconContent(
-                        labelText: 'PACE', icon: Icons.speed_outlined),
+                      labelText: 'PACE',
+                      icon: Icons.speed_outlined,
+                      color: selectedCalculation == CalculationType.pace
+                          ? kActiveTextColor
+                          : kInactiveTextColor,
+                      labelStyle: selectedCalculation == CalculationType.pace
+                          ? kActiveLabelTextStyle
+                          : kInactiveLabelTextStyle,
+                    ),
                     onPress: () {
                       print("pace printed");
                       setState(() {
@@ -370,7 +392,15 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                         ? kActiveCardColor
                         : kInactiveCardColour,
                     cardChild: IconContent(
-                        labelText: 'TIME', icon: Icons.access_alarm),
+                      labelText: 'TIME',
+                      icon: Icons.access_alarm,
+                      color: selectedCalculation == CalculationType.time
+                          ? kActiveTextColor
+                          : kInactiveTextColor,
+                      labelStyle: selectedCalculation == CalculationType.time
+                          ? kActiveLabelTextStyle
+                          : kInactiveLabelTextStyle,
+                    ),
                     onPress: () {
                       setState(() {
                         selectedCalculation = CalculationType.time;
@@ -382,7 +412,16 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                         ? kActiveCardColor
                         : kInactiveCardColour,
                     cardChild: IconContent(
-                        labelText: 'DISTANCE', icon: Icons.timeline),
+                      labelText: 'DISTANCE',
+                      icon: Icons.timeline,
+                      color: selectedCalculation == CalculationType.distance
+                          ? kActiveTextColor
+                          : kInactiveTextColor,
+                      labelStyle:
+                          selectedCalculation == CalculationType.distance
+                              ? kActiveLabelTextStyle
+                              : kInactiveLabelTextStyle,
+                    ),
                     onPress: () {
                       setState(() {
                         selectedCalculation = CalculationType.distance;

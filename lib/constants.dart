@@ -9,11 +9,20 @@ const kInactiveCardColour = Color(0xFF111328);
 final kBoxDeco =
     BoxDecoration(color: kCardColor, borderRadius: BorderRadius.circular(10.0));
 
+const kActiveTextColor = Color(0xFFFFFFFF);
+const kInactiveTextColor = Color(0xFF8D8E98);
+const kActiveLabelTextStyle = TextStyle(
+  fontSize: 18.0,
+  color: Color(0xFFFFFFFF),
+);
+const kInactiveLabelTextStyle = TextStyle(
+  fontSize: 18.0,
+  color: Color(0xFF8D8E98),
+);
 const kLabelTextStyle = TextStyle(
   fontSize: 18.0,
   color: Color(0xFF8D8E98),
 );
-
 const kNumberTextStyle = TextStyle(
   fontSize: 30.0,
   fontWeight: FontWeight.w900,

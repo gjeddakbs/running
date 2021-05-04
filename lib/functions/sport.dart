@@ -12,7 +12,10 @@ double kmMinToKmHour(double speed) => 60 / speed;
 
 double kmHourToKmMin(double speed) => speed * 60;
 
-double velocity(double time, double distance) {
+double velocity({
+  required int time,
+  required double distance,
+}) {
   return distance / time;
 }
 
@@ -58,9 +61,11 @@ double timeElapsed({required int distance, required double speed}) =>
     distance / speed;
 
 String secondsToTimeString({required double secondsUsed}) {
+  if (secondsUsed.isNaN || secondsUsed.isInfinite) return "0";
   var test = Duration(seconds: secondsUsed.toInt());
 
   return test.toString().split('.').first.padLeft(8, "0");
+
   // return "${(secondsUsed / 60).floor()} minutes :${(secondsUsed % 60).floor()}";
 }
 
@@ -75,6 +80,22 @@ double lengthToMeter({required lengthMetric, required var length}) {
     return length * (mileLength * 1000);
   }
   return length * 1000;
+}
+
+String meterSecondToDifferentSpeeds(
+    {required double meterSecondSpeed, required speedEnum}) {
+  if (speedEnum.toString() == "SpeedMetric.kmMin") {
+    var minKm = (16.666666667 / meterSecondSpeed);
+    return "${minKm.truncate()}m : ${(minKm.remainder(1) * 60).toStringAsFixed(0)}s /km";
+  } else if (speedEnum.toString() == "SpeedMetric.milesMin") {
+    return "${(26.8224 / meterSecondSpeed).toStringAsFixed(1)} Min/miles";
+  } else if (speedEnum.toString() == "SpeedMetric.milesHour") {
+    return "${(meterSecondSpeed * 2.236936).toStringAsFixed(1)} mph";
+  } else if (speedEnum.toString() == "SpeedMetric.kmHour") {
+    return "${(meterSecondSpeed * 18 / 5).toStringAsFixed(1)} km/h";
+  }
+
+  return "Annen verdi enn min/km";
 }
 
 double meterSecondConverter2({required speedMetric, var seconds, var value}) {
