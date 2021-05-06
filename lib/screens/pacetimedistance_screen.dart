@@ -25,6 +25,12 @@ class PaceTimeDistance extends StatefulWidget {
   _PaceTimeDistanceState createState() => _PaceTimeDistanceState();
 }
 
+final nameHolder = TextEditingController();
+
+clearTextInput() {
+  nameHolder.clear();
+}
+
 CalculationType selectedCalculation = CalculationType.pace;
 SpeedMetric selectedSpeed = SpeedMetric.kmMin;
 LengthMetric selectedLength = LengthMetric.meters;
@@ -85,11 +91,11 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                 thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0),
                 overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)),
             child: Container(
-              width: 300,
+              width: double.infinity,
               child: Slider(
                   min: 0.0,
                   max: 100.0,
-                  divisions: 1000,
+                  divisions: 500,
                   // label: length.toStringAsFixed(1),
                   value: speed,
                   onChanged: (value) {
@@ -209,7 +215,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 52.0),
             child: TextFormField(
-              initialValue: length.toString(),
+              controller: nameHolder,
+              onTap: () => clearTextInput(),
+              // initialValue: length.toString(),
               style: kNumberTextStyle,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
