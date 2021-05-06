@@ -12,6 +12,18 @@ double kmMinToKmHour(double speed) => 60 / speed;
 
 double kmHourToKmMin(double speed) => speed * 60;
 
+String distance(
+    {required double paceMS, required int timeUsed, required lengthMetric}) {
+  if (lengthMetric.toString() == "LengthMetric.meters") {
+    return "${(paceMS * timeUsed).toStringAsFixed(1)} m";
+  } else if (lengthMetric.toString() == "LengthMetric.km") {
+    return "${((paceMS * timeUsed) / 1000).toStringAsFixed(1)} km";
+  } else if (lengthMetric.toString() == "LengthMetric.miles") {
+    return "${((paceMS * timeUsed) / (mileLength * 1000)).toStringAsFixed(1)} miles";
+  }
+  return "0.0";
+}
+
 double velocity({
   required int time,
   required double distance,

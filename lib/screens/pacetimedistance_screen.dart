@@ -57,11 +57,18 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
 
   void distanceCalcLive() {
     setState(() {
-      distanceResult = "DISTANCE LONG OK";
+      distanceResult = distance(
+              paceMS: meterSecondConverter2(
+                  speedMetric: selectedSpeed,
+                  seconds: secondsUsed,
+                  value: speed),
+              timeUsed: timeInputSeconds,
+              lengthMetric: selectedLength)
+          .toString();
     });
   }
 
-  Widget paceWidget({required metric}) {
+  Widget paceWidget({required metric, required Function valueChangeFunction}) {
     if (metric == SpeedMetric.kmHour || metric == SpeedMetric.milesHour) {
       return Column(
         children: [
@@ -89,7 +96,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                     setState(() {
                       speed = value.toDouble();
 
-                      timeCalcLive();
+                      valueChangeFunction();
                     });
                   }),
             ),
@@ -106,7 +113,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
               onTimerDurationChanged: (value) {
                 setState(() {
                   secondsUsed = value.inSeconds;
-                  timeCalcLive();
+                  valueChangeFunction();
                 });
               }),
         ),
@@ -123,7 +130,7 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         children: [
           Container(
             decoration: kBoxDeco,
-            child: paceInput(),
+            child: paceInput(onTapFunction: timeCalcLive),
           ),
           Container(
               decoration: kBoxDeco,
@@ -154,12 +161,13 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            child: paceInput(),
+            child: paceInput(onTapFunction: distanceCalcLive),
             decoration: kBoxDeco,
           ),
           Container(
               decoration: kBoxDeco,
               child: timeInput(onChangeFunction: distanceCalcLive)),
+          lengthMetricRow(onTapFunction: distanceCalcLive),
           Text(
             "Distance ran:\n $distanceResult",
             style: kLargeButtonTextStyle,
@@ -267,15 +275,15 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     );
   }
 
-  Column paceInput() {
+  Column paceInput({required Function onTapFunction}) {
     return Column(
       children: [
         Text(
           "Pace",
           style: kNumberTextStyle,
         ),
-        speedCardRow(onTapFunction: timeCalcLive),
-        paceWidget(metric: selectedSpeed),
+        speedCardRow(onTapFunction: onTapFunction),
+        paceWidget(metric: selectedSpeed, valueChangeFunction: onTapFunction),
       ],
     );
   }
