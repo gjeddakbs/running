@@ -4,6 +4,7 @@ import 'package:run_app/components/BottomButton.dart';
 import 'package:run_app/components/calculation_card.dart';
 import 'package:run_app/components/icon_content.dart';
 import 'package:run_app/components/metricLabel_content.dart';
+import 'package:run_app/components/paceWidget.dart';
 import 'package:run_app/constants.dart';
 import 'package:run_app/functions/sport.dart';
 
@@ -74,58 +75,76 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     });
   }
 
-  Widget paceWidget({required metric, required Function valueChangeFunction}) {
-    if (metric == SpeedMetric.kmHour || metric == SpeedMetric.milesHour) {
-      return Column(
-        children: [
-          Text(
-            "${speed.toStringAsFixed(1)} ${(metric == SpeedMetric.kmHour) ? "km/h" : "mph"}",
-            style: kNumberTextStyle,
-          ),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-                thumbColor: Color(0xFFEB1555),
-                activeTrackColor: Colors.white,
-                inactiveTrackColor: Color(0xFF8D8E98),
-                overlayColor: Color(0x29EB1555),
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0),
-                overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)),
-            child: Container(
-              width: double.infinity,
-              child: Slider(
-                  min: 0.0,
-                  max: 100.0,
-                  divisions: 500,
-                  // label: length.toStringAsFixed(1),
-                  value: speed,
-                  onChanged: (value) {
-                    setState(() {
-                      speed = value.toDouble();
-
-                      valueChangeFunction();
-                    });
-                  }),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          height: 80,
-          child: CupertinoTimerPicker(
-              mode: CupertinoTimerPickerMode.ms,
-              onTimerDurationChanged: (value) {
-                setState(() {
-                  secondsUsed = value.inSeconds;
-                  valueChangeFunction();
-                });
-              }),
-        ),
-      );
-    }
+  void speedSliderChange(double speedInputValue) {
+    setState(() {
+      speed = speedInputValue;
+      print(speedInputValue);
+    });
   }
+
+  void speedCupertinoChange(int secondsInputValue) {
+    setState(() {
+      secondsUsed = secondsInputValue;
+      print(secondsInputValue);
+    });
+  }
+
+  // Widget paceWidget({ required double speed, required metric, required Function valueChangeFunction, required Function cupertinoUpdate, required Function sliderUpdate}) {
+  //   if (metric == SpeedMetric.kmHour || metric == SpeedMetric.milesHour) {
+  //     return Column(
+  //       children: [
+  //         Text(
+  //           "${speed.toStringAsFixed(1)} ${(metric == SpeedMetric.kmHour) ? "km/h" : "mph"}",
+  //           style: kNumberTextStyle,
+  //         ),
+  //         SliderTheme(
+  //           data: SliderTheme.of(context).copyWith(
+  //               thumbColor: Color(0xFFEB1555),
+  //               activeTrackColor: Colors.white,
+  //               inactiveTrackColor: Color(0xFF8D8E98),
+  //               overlayColor: Color(0x29EB1555),
+  //               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0),
+  //               overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)),
+  //           child: Container(
+  //             width: double.infinity,
+  //             child: Slider(
+  //                 min: 0.0,
+  //                 max: 100.0,
+  //                 divisions: 500,
+  //                 // label: length.toStringAsFixed(1),
+  //                 value: speed,
+  //                 onChanged: (value) {
+  //                   setState(() {
+  //                     sliderUpdate(value);
+  //                     // speedSliderChange(value);
+  //                     // speed = value.toDouble();
+  //
+  //                     valueChangeFunction();
+  //                   });
+  //                 }),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   } else {
+  //     return Padding(
+  //       padding: const EdgeInsets.all(20.0),
+  //       child: Container(
+  //         height: 80,
+  //         child: CupertinoTimerPicker(
+  //             mode: CupertinoTimerPickerMode.ms,
+  //             onTimerDurationChanged: (value) {
+  //               setState(() {
+  //                 cupertinoUpdate(value.inSeconds);
+  //                 // speedCupertinoChange(value.inSeconds);
+  //                 // secondsUsed = value.inSeconds;
+  //                 valueChangeFunction();
+  //               });
+  //             }),
+  //       ),
+  //     );
+  //   }
+  // }
 
   Widget testFunction({required selectedValue}) {
     /**TIME*/
@@ -291,7 +310,12 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
           style: kNumberTextStyle,
         ),
         speedCardRow(onTapFunction: onTapFunction),
-        paceWidget(metric: selectedSpeed, valueChangeFunction: onTapFunction),
+        PaceWidget(
+            speed: speed,
+            metric: selectedSpeed,
+            valueChangeFunction: onTapFunction,
+            cupertinoUpdate: speedCupertinoChange,
+            sliderUpdate: speedSliderChange)
       ],
     );
   }

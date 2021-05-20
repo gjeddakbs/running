@@ -72,6 +72,12 @@ double milesPerHourConverter({required double pace}) =>
 double timeElapsed({required int distance, required double speed}) =>
     distance / speed;
 
+double oneRoundPace({required int time, required double length}) {
+  var pace = velocity(time: time, distance: length);
+
+  return pace;
+}
+
 String secondsToTimeString({required double secondsUsed}) {
   if (secondsUsed.isNaN || secondsUsed.isInfinite) return "0";
   var test = Duration(seconds: secondsUsed.toInt());
