@@ -4,7 +4,8 @@ import 'package:run_app/components/BottomButton.dart';
 import 'package:run_app/components/calculation_card.dart';
 import 'package:run_app/components/icon_content.dart';
 import 'package:run_app/components/metricLabel_content.dart';
-import 'package:run_app/components/paceWidget.dart';
+import 'package:run_app/components/pacewidget_card.dart';
+import 'package:run_app/components/timeInput_card.dart';
 import 'package:run_app/constants.dart';
 import 'package:run_app/functions/sport.dart';
 
@@ -86,6 +87,12 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     setState(() {
       secondsUsed = secondsInputValue;
       print(secondsInputValue);
+    });
+  }
+
+  void timeCupertinoChange(int timeUsedInputValue) {
+    setState(() {
+      timeInputSeconds = timeUsedInputValue;
     });
   }
 
@@ -191,7 +198,10 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
           ),
           Container(
               decoration: kBoxDeco,
-              child: timeInput(onChangeFunction: distanceCalcLive)),
+              child: TimeWidget(
+                onChangeFunction: paceCalcLive,
+                timeUpdateFunction: timeCupertinoChange,
+              )),
           lengthMetricRow(onTapFunction: distanceCalcLive),
           Text(
             "Distance ran:\n $distanceResult",
@@ -209,7 +219,10 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
         children: [
           Container(
               decoration: kBoxDeco,
-              child: timeInput(onChangeFunction: paceCalcLive)),
+              child: TimeWidget(
+                onChangeFunction: paceCalcLive,
+                timeUpdateFunction: timeCupertinoChange,
+              )),
           Container(
               decoration: kBoxDeco,
               child: lengthInput(onTapFunction: paceCalcLive)),
@@ -373,25 +386,25 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
     );
   }
 
-  Column timeInput({required Function onChangeFunction}) {
-    return Column(
-      children: [
-        Text(
-          "Time",
-          style: kNumberTextStyle,
-        ),
-        Container(
-          height: 150,
-          child: CupertinoTimerPicker(onTimerDurationChanged: (value) {
-            setState(() {
-              timeInputSeconds = value.inSeconds;
-              onChangeFunction();
-            });
-          }),
-        )
-      ],
-    );
-  }
+  // Column timeInput({required Function onChangeFunction}) {
+  //   return Column(
+  //     children: [
+  //       Text(
+  //         "Time",
+  //         style: kNumberTextStyle,
+  //       ),
+  //       Container(
+  //         height: 150,
+  //         child: CupertinoTimerPicker(onTimerDurationChanged: (value) {
+  //           setState(() {
+  //             timeInputSeconds = value.inSeconds;
+  //             onChangeFunction();
+  //           });
+  //         }),
+  //       )
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

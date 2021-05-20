@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:run_app/constants.dart';
+import 'package:run_app/components/timeInput_card.dart';
 import 'package:run_app/functions/track_functions.dart';
 
 class TrackScreen extends StatefulWidget {
@@ -14,6 +14,13 @@ class _TrackScreenState extends State<TrackScreen> {
   num length = 0;
   var timeInputSeconds = 0;
   bool results = false;
+
+  void timeCupertinoChange(int timeUsedInputValue) {
+    setState(() {
+      timeInputSeconds = timeUsedInputValue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,19 +43,9 @@ class _TrackScreenState extends State<TrackScreen> {
                   labelText: "Length",
                 ),
               )),
-              Text(
-                "Time",
-                style: kNumberTextStyle,
-              ),
-              Container(
-                height: 150,
-                child: CupertinoTimerPicker(onTimerDurationChanged: (value) {
-                  setState(() {
-                    timeInputSeconds = value.inSeconds;
-                    // onChangeFunction();
-                  });
-                }),
-              ),
+              TimeWidget(
+                  onChangeFunction: () => {},
+                  timeUpdateFunction: timeCupertinoChange),
               TextButton(
                 onPressed: () {
                   setState(() {
