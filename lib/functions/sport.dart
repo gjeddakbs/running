@@ -104,9 +104,11 @@ String meterSecondToDifferentSpeeds(
     {required double meterSecondSpeed, required speedEnum}) {
   if (speedEnum.toString() == "SpeedMetric.kmMin") {
     var minKm = (16.666666667 / meterSecondSpeed);
-    return "${minKm.truncate()}m : ${(minKm.remainder(1) * 60).toStringAsFixed(0)}s /km";
+    return "${minKm.truncate()}m : ${(minKm.remainder(1) * 60).toStringAsFixed(1).toString()}s /km";
   } else if (speedEnum.toString() == "SpeedMetric.milesMin") {
-    return "${(26.8224 / meterSecondSpeed).toStringAsFixed(1)} Min/miles";
+    // return "${(26.8224 / meterSecondSpeed).toStringAsFixed(1)} Min/miles";
+    var minMph = (26.8224 / meterSecondSpeed);
+    return "${minMph.truncate()}m : ${(minMph.remainder(1) * 60).floor().toString()}s  /miles";
   } else if (speedEnum.toString() == "SpeedMetric.milesHour") {
     return "${(meterSecondSpeed * 2.236936).toStringAsFixed(1)} mph";
   } else if (speedEnum.toString() == "SpeedMetric.kmHour") {

@@ -167,23 +167,27 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
           Container(
               decoration: kBoxDeco,
               child: lengthInput(onTapFunction: timeCalcLive)),
-          Text(
-            "Time used:\n $timeResult",
-            style: kLargeButtonTextStyle,
+          Flexible(
+            child: Text(
+              "Time used:\n $timeResult",
+              style: kLargeButtonTextStyle,
+            ),
           ),
-          BottomButton(
-              onTap: () {
-                setState(() {
-                  timeResult = timeUsed(
-                      pace: meterSecondConverter2(
-                          speedMetric: selectedSpeed,
-                          seconds: secondsUsed,
-                          value: speed),
-                      length: lengthToMeter(
-                          lengthMetric: selectedLength, length: length));
-                });
-              },
-              buttonTitle: "Calculate"),
+          Flexible(
+            child: BottomButton(
+                onTap: () {
+                  setState(() {
+                    timeResult = timeUsed(
+                        pace: meterSecondConverter2(
+                            speedMetric: selectedSpeed,
+                            seconds: secondsUsed,
+                            value: speed),
+                        length: lengthToMeter(
+                            lengthMetric: selectedLength, length: length));
+                  });
+                },
+                buttonTitle: "Calculate"),
+          ),
         ],
       );
       /**DISTANCE */
@@ -203,12 +207,16 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                 timeUpdateFunction: timeCupertinoChange,
               )),
           lengthMetricRow(onTapFunction: distanceCalcLive),
-          Text(
-            "Distance ran:\n $distanceResult",
-            style: kLargeButtonTextStyle,
+          Flexible(
+            child: Text(
+              "Distance ran:\n $distanceResult",
+              style: kLargeButtonTextStyle,
+            ),
           ),
-          BottomButton(
-              onTap: distanceCalcLive, buttonTitle: "Calculate distance")
+          Flexible(
+            child: BottomButton(
+                onTap: distanceCalcLive, buttonTitle: "Calculate distance"),
+          )
         ],
       );
     }
@@ -227,11 +235,15 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
               decoration: kBoxDeco,
               child: lengthInput(onTapFunction: paceCalcLive)),
           speedCardRow(onTapFunction: paceCalcLive),
-          Text(
-            "Running pace:\n $paceResult",
-            style: kLargeButtonTextStyle,
+          Flexible(
+            child: Text(
+              "Running pace:\n $paceResult",
+              style: kLargeButtonTextStyle,
+            ),
           ),
-          BottomButton(onTap: paceCalcLive, buttonTitle: "Calculate pace")
+          Flexible(
+              child: BottomButton(
+                  onTap: paceCalcLive, buttonTitle: "Calculate pace"))
         ]);
   }
 
@@ -344,7 +356,6 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
             cardChild: MetricLabelContent(labelText: "min/km"),
             onPress: () {
               setState(() {
-                print("kmMin");
                 selectedSpeed = SpeedMetric.kmMin;
                 onTapFunction();
               });
@@ -482,7 +493,9 @@ class _PaceTimeDistanceState extends State<PaceTimeDistance> {
                     }),
               ],
             ),
-            Expanded(child: testFunction(selectedValue: selectedCalculation)),
+            Expanded(
+              child: testFunction(selectedValue: selectedCalculation),
+            ),
           ],
         ),
       ),
